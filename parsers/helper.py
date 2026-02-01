@@ -10,14 +10,14 @@ def parse_amount(text):
 def extract_between(text, start, end):
     """Extract text between two markers."""
     try:
-        start_idx = text.find(start)
-        if start_idx == -1:
+        start_index = text.find(start)
+        if start_index == -1:
             return None
-        start_idx += len(start)
-        end_idx = text.find(end, start_idx)
-        if end_idx == -1:
+        start_index += len(start)
+        end_index = text.find(end, start_index)
+        if end_index == -1:
             return None
-        return text[start_idx:end_idx].strip()
+        return text[start_index:end_index].strip()
     except:
         return None
 
@@ -29,32 +29,32 @@ def extract_name(text):
     return ' '.join(text.split())
 
 
-def extract_txn_id(body):
+def extract_transaction_id(body):
     """Extract transaction ID from SMS body."""
     
     # Format: "TxId: 73214484437."
     if 'TxId: ' in body:
-        txn_id = extract_between(body, 'TxId: ', '.')
-        if txn_id and txn_id.isdigit():
-            return int(txn_id)
+        transaction_id = extract_between(body, 'TxId: ', '.')
+        if transaction_id and transaction_id.isdigit():
+            return int(transaction_id)
     
     # Format: "*162*TxId:13913173274*S*"
     if '*TxId:' in body:
-        txn_id = extract_between(body, '*TxId:', '*')
-        if txn_id and txn_id.isdigit():
-            return int(txn_id)
+        transaction_id = extract_between(body, '*TxId:', '*')
+        if transaction_id and transaction_id.isdigit():
+            return int(transaction_id)
     
     # Format: "Financial Transaction Id: 76662021700."
     if 'Financial Transaction Id: ' in body:
-        txn_id = extract_between(body, 'Financial Transaction Id: ', '.')
-        if txn_id and txn_id.isdigit():
-            return int(txn_id)
+        transaction_id = extract_between(body, 'Financial Transaction Id: ', '.')
+        if transaction_id and transaction_id.isdigit():
+            return int(transaction_id)
     
     # Format: "Transaction Id: 14098463509."
     if 'Transaction Id: ' in body:
-        txn_id = extract_between(body, 'Transaction Id: ', '.')
-        if txn_id and txn_id.isdigit():
-            return int(txn_id)
+        transaction_id = extract_between(body, 'Transaction Id: ', '.')
+        if transaction_id and transaction_id.isdigit():
+            return int(transaction_id)
     
     return None
 
@@ -65,7 +65,7 @@ def parse_sms_body(body):
         return None
     
     result = {
-        'id': extract_txn_id(body),
+        'id': extract_transaction_id(body),
         'amount': 0,
         'type': 'unknown',
         'sender': '',

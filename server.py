@@ -48,26 +48,26 @@ class APIRRequestHandler(BaseHTTPRequestHandler):
         elif self.path == '/transactions/me':
             handle_get_my_transactions(self)
         else:
-            route_type, txn_id = parse_transaction_path(self.path)
-            if txn_id is not None:
+            route_type, transaction_id = parse_transaction_path(self.path)
+            if transaction_id is not None:
                 if route_type == 'transactions':
-                    handle_get_transaction_by_id(self, txn_id)
+                    handle_get_transaction_by_id(self, transaction_id)
                 elif route_type == 'indexed_transactions':
-                    handle_get_transaction_by_id_indexed(self, txn_id)
+                    handle_get_transaction_by_id_indexed(self, transaction_id)
             else:
                 self.send_error(404, "Not Found")
 
     def do_PUT(self):
-        route_type, txn_id = parse_transaction_path(self.path)
-        if txn_id is not None and route_type == 'transactions':
-            handle_update_transaction(self, txn_id)
+        route_type, transaction_id = parse_transaction_path(self.path)
+        if transaction_id is not None and route_type == 'transactions':
+            handle_update_transaction(self, transaction_id)
         else:
             self.send_error(404, "Not Found")
 
     def do_DELETE(self):
-        route_type, txn_id = parse_transaction_path(self.path)
-        if txn_id is not None and route_type == 'transactions':
-            handle_delete_transaction(self, txn_id)
+        route_type, transaction_id = parse_transaction_path(self.path)
+        if transaction_id is not None and route_type == 'transactions':
+            handle_delete_transaction(self, transaction_id)
         else:
             self.send_error(404, "Not Found")
 

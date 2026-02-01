@@ -28,15 +28,15 @@ def parse_xml_file(file_path):
         parsed = parse_sms_body(body)
         
         if parsed and parsed['amount'] > 0:
-            txn_id = parsed['id']
+            transaction_id = parsed['id']
             
             # If no ID from XML, assign auto-incremented ID
-            if txn_id is None:
-                txn_id = auto_id
+            if transaction_id is None:
+                transaction_id = auto_id
                 auto_id += 1
             
             transaction = {
-                'id': txn_id,
+                'id': transaction_id,
                 'sender': parsed['sender'],
                 'receiver': parsed['receiver'],
                 'amount': parsed['amount'],
@@ -45,7 +45,7 @@ def parse_xml_file(file_path):
             }
             
             database.transactions.append(transaction)
-            database.transactions_dictionary[txn_id] = transaction
+            database.transactions_dictionary[transaction_id] = transaction
             count += 1
   
     database.transaction_id_counter = auto_id
@@ -60,8 +60,8 @@ def print_transactions():
     print(f"Transaction ID Counter: {database.transaction_id_counter}")
     print(f"{'='*80}\n")
     
-    for txn in database.transactions[:15]:
-        print(txn)
+    for transaction in database.transactions[:15]:
+        print(transaction)
         print()
 
 

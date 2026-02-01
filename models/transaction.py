@@ -20,11 +20,11 @@ class Transaction:
         receiver['balance'] += amount
         
         # Log transaction
-        txn_id = database.transaction_id_counter
+        transaction_id = database.transaction_id_counter
         database.transaction_id_counter += 1
         
         transaction = {
-            'id': txn_id,
+            'id': transaction_id,
             'sender_id': sender_id,
             'receiver_id': receiver_id,
             'amount': amount,
@@ -32,39 +32,39 @@ class Transaction:
             'created_at': datetime.datetime.utcnow().isoformat()
         }
         database.transactions.append(transaction)
-        database.transactions_dictionary[txn_id] = transaction
+        database.transactions_dictionary[transaction_id] = transaction
         
-        return txn_id, None
+        return transaction_id, None
 
     @staticmethod
     def get_all():
         return database.transactions.copy()
 
     @staticmethod
-    def get_by_id(txn_id):
-        for txn in database.transactions:
-            if txn['id'] == txn_id:
-                return txn
+    def get_by_id(transaction_id):
+        for transaction in database.transactions:
+            if transaction['id'] == transaction_id:
+                return transaction
         return None
 
     @staticmethod
-    def get_by_id_indexed(txn_id):
+    def get_by_id_indexed(transaction_id):
         """Get transaction by ID using the dictionary index"""
-        return database.transactions_dictionary.get(txn_id)
+        return database.transactions_dictionary.get(transaction_id)
 
     @staticmethod
     def get_by_user(user_id):
         """Get all transactions where user is sender or receiver"""
-        return [txn for txn in database.transactions if txn['sender_id'] == user_id or txn['receiver_id'] == user_id]
+        return [transaction for transaction in database.transactions if transaction['sender_id'] == user_id or transaction['receiver_id'] == user_id]
 
     @staticmethod
-    def update(txn_id, user_id, role, **kwargs):
+    def update(transaction_id, user_id, role, **kwargs):
         """Update a transaction. Only Admins can update a transaction."""
         if role != 'ADMIN':
             return None, "Only Admins can update transactions"
 
-        for i, txn in enumerate(database.transactions):
-            if txn['id'] == txn_id:
+        for i, transaction in enumerate(database.transactions):
+            if transaction['id'] == transaction_id:
                 # Only allow updating certain fields
                 allowed_fields = ['type']
                 for key, value in kwargs.items():
@@ -74,22 +74,22 @@ class Transaction:
                         database.transactions[i][key] = value
                 
                 # Update dictionary as well
-                database.transactions_dictionary[txn_id] = database.transactions[i]
+                database.transactions_dictionary[transaction_id] = database.transactions[i]
                 
                 return database.transactions[i], None
         return None, "Transaction not found"
 
     @staticmethod
-    def delete(txn_id, user_id, role):
+    def delete(transaction_id, user_id, role):
         """Delete a transaction. Only Admins can delete a transaction."""
         if role != "ADMIN":
             return False, "Only Admins can delete transactions"
 
-        for i, txn in enumerate(database.transactions):
-            if txn['id'] == txn_id:
-                deleted_txn = database.transactions.pop(i)
+        for i, transaction in enumerate(database.transactions):
+            if transaction['id'] == transaction_id:
+                deleted_transaction = database.transactions.pop(i)
                 # Remove from dictionary as well
-                if txn_id in database.transactions_dictionary:
-                    del database.transactions_dictionary[txn_id]
-                return True, deleted_txn
+                if transaction_id in database.transactions_dictionary:
+                    del database.transactions_dictionary[transaction_id]
+                return True, deleted_transaction
         return False, "Transaction not found"
