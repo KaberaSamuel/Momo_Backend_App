@@ -40,7 +40,7 @@ You should have Python 3 and `pipenv` installed on your machine.
 
 Start the server by running:
 ```bash
-pipenv run python server.py
+python server.py
 ```
 The server will start on `http://localhost:5000`.
 
@@ -161,6 +161,7 @@ Most endpoints require a JWT token. Send it in the header as: `Authorization: Be
 - **Note**: This operation is restricted to only Admin users.
 
 
-## Testing
-
+## Unit Testing
 pipenv run pytest
+
+## Screenshots Output

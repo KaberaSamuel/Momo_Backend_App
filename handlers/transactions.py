@@ -18,11 +18,24 @@ def handle_add_transaction(handler):
         return json_response(handler, 201, {"id": txn_id, "message": "Transaction successful"})
     return json_response(handler, 400, {"message": error or "Transaction failed"})
 
+def format_transaction_response(txn, user_name):
+    """Replace 'Me' with the user's actual name in transaction record"""
+    if not txn:
+        return txn
+    
+    formatted = txn.copy()
+    if formatted.get('sender') == 'Me':
+        formatted['sender'] = user_name
+    if formatted.get('receiver') == 'Me':
+        formatted['receiver'] = user_name
+    return formatted
+
 @jwt_required
 def handle_get_transactions(handler):
     """GET /transactions/ - Get all transactions"""
     transactions = Transaction.get_all()
-    return json_response(handler, 200, transactions)
+    formatted_txns = [format_transaction_response(txn, handler.user_name) for txn in transactions]
+    return json_response(handler, 200, formatted_txns)
 
 @jwt_required
 def handle_get_transaction_by_id(handler, txn_id):
@@ -30,7 +43,8 @@ def handle_get_transaction_by_id(handler, txn_id):
     transaction = Transaction.get_by_id(txn_id)
     
     if transaction:
-        return json_response(handler, 200, transaction)
+        formatted_txn = format_transaction_response(transaction, handler.user_name)
+        return json_response(handler, 200, formatted_txn)
     return json_response(handler, 404, {"message": "Transaction not found"})
 
 @jwt_required
@@ -39,7 +53,8 @@ def handle_get_transaction_by_id_indexed(handler, txn_id):
     transaction = Transaction.get_by_id_indexed(txn_id)
     
     if transaction:
-        return json_response(handler, 200, transaction)
+        formatted_txn = format_transaction_response(transaction, handler.user_name)
+        return json_response(handler, 200, formatted_txn)
     return json_response(handler, 404, {"message": "Transaction not found"})
 
 @jwt_required
@@ -47,8 +62,9 @@ def handle_get_my_transactions(handler):
     """GET /transactions/me - Get current user's transactions"""
     user_id = handler.user_id
     transactions = Transaction.get_by_user(user_id)
+    formatted_txns = [format_transaction_response(txn, handler.user_name) for txn in transactions]
 
-    return json_response(handler, 200, transactions)
+    return json_response(handler, 200, formatted_txns)
 
 @jwt_required
 def handle_update_transaction(handler, txn_id):
