@@ -4,11 +4,9 @@ from utils import json_response, read_json_body, jwt_required
 @jwt_required
 def handle_add_transaction(handler):
     """POST /transactions/ - Create a new transaction"""
-    sender_id = handler.user_id 
-
     data = read_json_body(handler)
     transaction_id, error = Transaction.create(
-        sender_id=sender_id,
+        sender_id=data.get('senderId'),
         receiver_id=data.get('receiverId'),
         amount=data.get('amount'),
         transaction_type=data.get('type', 'transfer')

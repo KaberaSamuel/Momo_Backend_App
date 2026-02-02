@@ -37,7 +37,7 @@ class APIRRequestHandler(BaseHTTPRequestHandler):
             handle_login(self)
         elif self.path == '/auth/logout':
             handle_logout(self)
-        elif self.path == '/transactions/':
+        elif self.path == '/transactions':
             handle_add_transaction(self)
         else:
             self.send_error(404, "Not Found")

@@ -21,12 +21,12 @@ Optimizing data retrieval was a primary focus for this project. We evaluated two
 #### **Linear Search**
 Initially, the system retrieved transactions by iterating through a list until a match was found.
 *   **Limitation:** This approach has a time complexity of $O(n)$, meaning search time increases as the number of transactions grows. For 10,000 records, the system might need to scan every record.
-![Linear Search Context](screenshots/get_transaction_by_linear_search.png)
+![Linear Search Context](./screenshots/get_transaction_by_linear_search.png)
 
 #### **Dictionary Lookup (Indexed)**
 To improve performance, we also implemented an indexed lookup using a Python Dictionary.
 *   **Optimization:** This provides a time complexity of $O(1)$, ensuring that retrieval remains nearly instantaneous regardless of whether there are ten or ten million records.
-![Indexed Lookup Performance](screenshots/get_transaction_by_dictionary_key_lookup.png)
+![Indexed Lookup Performance](./screenshots/get_transaction_by_dictionary_key_lookup.png)
 
 ## API Reference
 
