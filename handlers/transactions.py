@@ -60,8 +60,7 @@ def handle_get_transaction_by_id_indexed(handler, transaction_id):
 @jwt_required
 def handle_get_my_transactions(handler):
     """GET /transactions/me - Get current user's transactions"""
-    user_id = handler.user_id
-    transactions = Transaction.get_by_user(user_id)
+    transactions = Transaction.get_by_user()
     formatted_transactions = [format_transaction_response(transaction, handler.user_name) for transaction in transactions]
 
     return json_response(handler, 200, formatted_transactions)

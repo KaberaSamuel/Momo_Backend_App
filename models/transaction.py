@@ -53,9 +53,13 @@ class Transaction:
         return database.transactions_dictionary.get(transaction_id)
 
     @staticmethod
-    def get_by_user(user_id):
+    def get_by_user():
         """Get all transactions where user is sender or receiver"""
-        return [transaction for transaction in database.transactions if transaction['sender_id'] == user_id or transaction['receiver_id'] == user_id]
+        my_transactions = []
+        for transaction in database.transactions:
+            if transaction['sender'] == "Me" or transaction['receiver'] == "Me":
+                my_transactions.append(transaction)
+        return my_transactions
 
     @staticmethod
     def update(transaction_id, user_id, role, **kwargs):
